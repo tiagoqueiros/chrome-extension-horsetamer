@@ -94,6 +94,7 @@ const startFarm = () => {
         // 2.1. If enough LC, go to LA
         if (lcCount >= 4 && spyCount >= 1) {
           console.log("Going to tame the horses");
+          window.scrollTo({ top: 0, behavior: "smooth" });
           await setSleep(() => document.querySelectorAll("#manager_icon_farm")[0].click());
         }
       }
@@ -107,6 +108,7 @@ const startFarm = () => {
 
       if(spyCount < 1 || lightCount < 4) {
         console.log("Back to stable door");
+        window.scrollTo({ top: 0, behavior: "smooth" });
         await setSleep(() => document.querySelectorAll("#menu_row2_village a")[0].click());
         intervalLock = false;
         return false;
@@ -134,16 +136,19 @@ const startFarm = () => {
 
           if(spyCount < 1 || lightCount < 4) {
             console.log("Back to stable door");
+            window.scrollTo({ top: 0, behavior: "smooth" });
             await setSleep(() => document.querySelectorAll("#menu_row2_village a")[0].click());
             intervalLock = false;
             return false;
+          } else {
+            window.scrollTo({ top: _vil.getBoundingClientRect().top || 0, behavior: "smooth" });
+            await setSleep(() => _vil.querySelector(".farm_icon.farm_icon_a").click(), 5);
           }
-
-          await setSleep(() => _vil.querySelector(".farm_icon.farm_icon_a").click(), 5);
         }
       }
 
       console.log("Back to stable door");
+      window.scrollTo({ top: 0, behavior: "smooth" });
       await setSleep(() => document.querySelectorAll("#menu_row2_village a")[0].click());
 
       intervalLock = false;
