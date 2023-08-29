@@ -25,7 +25,6 @@ const setSleep = async (callback, timing = 2) => {
 
 const startFarm = () => {
   let _cmdCount = 0;
-  let _incomingCount = 0;
   let intervalLock = false;
   console.log("Taming started");
 
@@ -50,25 +49,69 @@ const startFarm = () => {
       return false;
     }
 
-    if(document.querySelectorAll("#incomings_cell").length > 0
-        && parseInt(document.querySelectorAll("#incomings_cell")[0].innerText) > _incomingCount) {
-      console.log("Welcome customer");
-      _incomingCount = parseInt(document.querySelectorAll("#incomings_cell")[0].innerText)
-      await setSleep(() => document.querySelectorAll("#incomings_cell a")[0].click());
-    }
-
     if(document.location.search.includes(incomingQueryParam)) {
       intervalLock = true;
+      const hasIncomings = Array.from(document.querySelectorAll("#incomings_table tr .quickedit")).reduce((_val, _inc) => {
+        if(_val) {
+          return _val;
+        }
+
+        return !_inc.innerText.includes("Spear")
+            && !_inc.innerText.includes("Sword")
+            && !_inc.innerText.includes("Axe")
+            && !_inc.innerText.includes("Archer")
+            && !_inc.innerText.includes("Spy")
+            && !_inc.innerText.includes("LCav")
+            && !_inc.innerText.includes("MArch")
+            && !_inc.innerText.includes("HCav")
+            && !_inc.innerText.includes("Ram")
+            && !_inc.innerText.includes("Cata")
+            && !_inc.innerText.includes("Pala")
+            && !_inc.innerText.includes("Noble");
+      }, false);
+
+      if(!hasIncomings) {
+        await setSleep(() => document.querySelectorAll("#menu_row2_village a")[0].click());
+        console.log("Customer delivered");
+        intervalLock = false;
+        return;
+      }
+
       document.querySelectorAll("#select_all")[0].click();
       document.querySelectorAll("input[value='Label']")[0].click();
-      console.log("Customer delivered");
       await setSleep(() => document.querySelectorAll("#menu_row2_village a")[0].click());
-
+      console.log("Customer delivered");
       intervalLock = false;
     }
 
     else if(document.location.search.includes(homeQueryParam)) {
       intervalLock = true;
+
+      if(document.querySelectorAll("#commands_incomings .command-row .quickedit").length > 0) {
+        const hasIncomings = Array.from(document.querySelectorAll("#commands_incomings .command-row .quickedit")).reduce((_val, _inc) => {
+          if(_val) {
+            return _val;
+          }
+
+          return !_inc.innerText.includes("Spear")
+              && !_inc.innerText.includes("Sword")
+              && !_inc.innerText.includes("Axe")
+              && !_inc.innerText.includes("Archer")
+              && !_inc.innerText.includes("Spy")
+              && !_inc.innerText.includes("LCav")
+              && !_inc.innerText.includes("MArch")
+              && !_inc.innerText.includes("HCav")
+              && !_inc.innerText.includes("Ram")
+              && !_inc.innerText.includes("Cata")
+              && !_inc.innerText.includes("Pala")
+              && !_inc.innerText.includes("Noble");
+        }, false);
+
+        if(hasIncomings) {
+          console.log("Welcome customer");
+          await setSleep(() => document.querySelectorAll("#incomings_cell a")[0].click());
+        }
+      }
 
       // 1. Grow the stable
       /*const farmLeft = parseInt(document.querySelectorAll("#header_info .box-item #pop_max_label")[0].innerText) - parseInt(document.querySelectorAll("#header_info .box-item #pop_current_label")[0].innerText);
